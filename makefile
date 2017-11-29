@@ -1,15 +1,15 @@
 # ---------------------------------------------------------------------------
-# Имя проекта
+# пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
-NAME	= lab2
+NAME	= test_serial
 
-# Настройки компилятора и линкера
-# можно просто сделать ссылку =)
-CC      = sdcc.exe
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+
+CC      = sdcc
 CFLAGS  = -I./INCLUDE -c --stack-auto
 LFLAGS  = --code-loc 0x2100 --xram-loc 0x6000 --stack-auto --stack-loc 0x80 
 
-# Настройки системы автоинкремента версии сборки
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
 PROJECT  = $(shell type PROJECT)
 VERSION  = $(shell type VERSION)
@@ -19,19 +19,19 @@ TYPE     = $(shell type TYPE)
 PROJNAME = ${PROJECT}-${VERSION}-${BUILD}-${TYPE}
 TARBALL  = ${PROJNAME}.tar
 
-# Настройки M3P
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ M3P
 
-M3P		 = m3p.exe
+M3P		 = m3p
 COMPORT	 = com1
 COMLOG	 = $(COMPORT)_log.txt
 BAUD	 = 9600	
 
-# Каталоги с исходными текстами
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 SRC_DIR = SRC
 # ---------------------------------------------------------------------------
 
-all: lab2
+all: test_serial
 
 clean:
 	del $(NAME).hex
@@ -61,23 +61,18 @@ term:
 
 
 
-LIST_SRC = \
+TEST_SERIAL_SRC = \
 $(SRC_DIR)/led.c \
 $(SRC_DIR)/max.c \
-$(SRC_DIR)/common.c \
-$(SRC_DIR)/animation.c \
-$(SRC_DIR)/mode_selector.c \
-$(SRC_DIR)/counter.c \
-$(SRC_DIR)/system_timer.c \
-$(SRC_DIR)/lab2.c 
+$(SRC_DIR)/sio.c \
+$(SRC_DIR)/test_sio.c 
 
-LIST_OBJ = $(LIST_SRC:.c=.rel)
+TEST_SERIAL_OBJ = $(TEST_SERIAL_SRC:.c=.rel)
 
-lab2 : $(LIST_OBJ) makefile
-	$(CC) $(LIST_OBJ) -o lab2.hex $(LFLAGS)
-	$(M3P) hb166 lab2.hex lab2.bin bye
+test_serial : $(TEST_SERIAL_OBJ) makefile
+	$(CC) $(TEST_SERIAL_OBJ) -o test_serial.hex $(LFLAGS)
+	$(M3P) hb166 test_serial.hex test_serial.bin bye
 
 
-$(LIST_OBJ) : %.rel : %.c makefile
+$(TEST_SERIAL_OBJ) : %.rel : %.c makefile
 	$(CC) -c $(CFLAGS) $< -o $@  
-
