@@ -1,15 +1,15 @@
 # ---------------------------------------------------------------------------
-# пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+# Имя проекта
 
-NAME	= test_serial
+NAME	= lab3
 
-# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+# Настройки компилятора и линкера
 
 CC      = sdcc
 CFLAGS  = -I./INCLUDE -c --stack-auto
 LFLAGS  = --code-loc 0x2100 --xram-loc 0x6000 --stack-auto --stack-loc 0x80 
 
-# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+# Настройки системы автоинкремента версии сборки
 
 PROJECT  = $(shell type PROJECT)
 VERSION  = $(shell type VERSION)
@@ -19,19 +19,19 @@ TYPE     = $(shell type TYPE)
 PROJNAME = ${PROJECT}-${VERSION}-${BUILD}-${TYPE}
 TARBALL  = ${PROJNAME}.tar
 
-# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ M3P
+# Настройки M3P
 
 M3P		 = m3p
-COMPORT	 = com1
+COMPORT	 = com2
 COMLOG	 = $(COMPORT)_log.txt
 BAUD	 = 9600	
 
-# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+# Каталоги с исходными текстами
 
 SRC_DIR = SRC
 # ---------------------------------------------------------------------------
 
-all: test_serial
+all: lab3
 
 clean:
 	del $(NAME).hex
@@ -60,18 +60,21 @@ term:
 	$(M3P) echo $(COMLOG) $(BAUD)  openchannel $(COMPORT) +echo 6 term -echo bye
 
 
-
 TEST_SERIAL_SRC = \
-$(SRC_DIR)/led.c \
 $(SRC_DIR)/max.c \
-$(SRC_DIR)/sio.c \
-$(SRC_DIR)/test_sio.c 
+$(SRC_DIR)/interrupt.c \
+$(SRC_DIR)/system_timer.c \
+$(SRC_DIR)/uart.c \
+$(SRC_DIR)/led.c \
+$(SRC_DIR)/buffer.c \
+$(SRC_DIR)/handler.c \
+$(SRC_DIR)/lab3.c 
 
 TEST_SERIAL_OBJ = $(TEST_SERIAL_SRC:.c=.rel)
 
-test_serial : $(TEST_SERIAL_OBJ) makefile
-	$(CC) $(TEST_SERIAL_OBJ) -o test_serial.hex $(LFLAGS)
-	$(M3P) hb166 test_serial.hex test_serial.bin bye
+lab3 : $(TEST_SERIAL_OBJ) makefile
+	$(CC) $(TEST_SERIAL_OBJ) -o lab3.hex $(LFLAGS)
+	$(M3P) hb166 lab3.hex lab3.bin bye
 
 
 $(TEST_SERIAL_OBJ) : %.rel : %.c makefile
